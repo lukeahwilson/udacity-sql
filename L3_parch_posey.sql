@@ -1,4 +1,4 @@
--- \i 'C:/Users/lukea/Programming/Udacity Code/udacity-sql/L3_groupby_parch_posey.sql'
+-- \i 'C:/Users/lukea/Programming/Udacity Code/udacity-sql/L3_parch_posey.sql'
 
 -- Which account (by name) placed the earliest order?
 	-- SELECT a.name, o.occurred_at
@@ -46,9 +46,33 @@
 	-- ORDER BY smallest_order;
 
 -- Find the number of sales reps in each region.
-	SELECT r.name, COUNT(*) num_reps
-	FROM region r
-	JOIN sales_reps s
-	ON r.id = s.region_id
-	GROUP BY r.name
-	ORDER BY num_reps;
+	-- SELECT r.name, COUNT(*) num_reps
+	-- FROM region r
+	-- JOIN sales_reps s
+	-- ON r.id = s.region_id
+	-- GROUP BY r.name
+	-- ORDER BY num_reps;
+
+-- For each account, determine the average amount of each type of paper they purchased across their orders.
+		-- SELECT a.name, AVG(o.standard_qty) AS avg_s,
+		-- 	AVG(o.gloss_qty) AS avg_g,
+		-- 	AVG(o.poster_qty) AS avg_p
+		-- FROM accounts as a
+		-- JOIN orders as o
+		-- ON o.account_id = a.id
+		-- GROUP BY a.name
+		-- ORDER BY a.name
+		-- LIMIT 20;
+
+-- Determine the number of times a particular channel was used in the web_events table for each sales rep.
+	SELECT s.name, w.channel, COUNT(*) AS channel_frequency
+	FROM web_events AS w
+	JOIN accounts AS a
+	ON a.id = w.account_id
+	JOIN sales_reps AS s
+	ON s.id = a.sales_rep_id
+	GROUP BY s.name, w.channel
+	ORDER BY s.name, channel_frequency
+	LIMIT 30;
+
+--
