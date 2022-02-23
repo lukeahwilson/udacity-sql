@@ -125,11 +125,40 @@
 	-- ORDER BY 2 DESC;
 
 -- In which month of which year did Walmart spend the most on gloss paper in terms of dollars?
-	SELECT DATE_TRUNC('month', o.occurred_at) ord_date, SUM(o.gloss_amt_usd) tot_spent
+	-- SELECT DATE_TRUNC('month', o.occurred_at) ord_date, SUM(o.gloss_amt_usd) tot_spent
+	-- FROM orders o
+	-- JOIN accounts a
+	-- ON a.id = o.account_id
+	-- WHERE a.name = 'Walmart'
+	-- GROUP BY 1
+	-- ORDER BY 2 DESC
+	-- LIMIT 5;
+
+-- Write a query to display for each order, the account ID and the level of the order - ‘Large’ or ’Small’
+	-- SELECT account_id, total_amt_usd, CASE WHEN total_amt_usd > 3000 THEN 'Large' ELSE 'Small' END as order_size
+	-- FROM orders;
+
+-- We would like to identify top performing sales reps, which are sales reps associated with more than 200 orders.
+	-- SELECT s.name, COUNT(*) num_ords,
+	--      CASE WHEN COUNT(*) > 200 THEN 'top'
+	--      ELSE 'not' END AS sales_rep_level
+	-- FROM orders o
+	-- JOIN accounts a
+	-- ON o.account_id = a.id
+	-- JOIN sales_reps s
+	-- ON s.id = a.sales_rep_id
+	-- GROUP BY 1
+	-- ORDER BY 2 DESC;
+
+-- We would like to identify top performing sales reps, which are sales reps associated with more than 200 orders or more than 750000 in total sales.
+	SELECT s.name, COUNT(*), SUM(o.total_amt_usd) total_spent,
+	     CASE WHEN COUNT(*) > 200 OR SUM(o.total_amt_usd) > 750000 THEN 'top'
+	     WHEN COUNT(*) > 150 OR SUM(o.total_amt_usd) > 500000 THEN 'middle'
+	     ELSE 'low' END AS sales_rep_level
 	FROM orders o
 	JOIN accounts a
-	ON a.id = o.account_id
-	WHERE a.name = 'Walmart'
-	GROUP BY 1
-	ORDER BY 2 DESC
-	LIMIT 5;
+	ON o.account_id = a.id
+	JOIN sales_reps s
+	ON s.id = a.sales_rep_id
+	GROUP BY s.name
+	ORDER BY 3 DESC;
