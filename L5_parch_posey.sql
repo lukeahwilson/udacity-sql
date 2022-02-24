@@ -49,11 +49,44 @@
 	-- SELECT name, primary_poc, CONCAT(first_dot_last, '@', REPLACE(name, ' ', ''), '.com')
 	-- FROM first_dot_last_table
 	-- LIMIT 10;
-	--
 	-- SELECT name, primary_poc, CONCAT(REPLACE(primary_poc, ' ', '.'), '@', REPLACE(name, ' ', ''), '.com')
 	-- FROM accounts
 	-- LIMIT 10;
 
-	SELECT date AS orig_date, REPLACE(CONCAT(RIGHT(LEFT(date, 10), 4), '/', LEFT(date, 5)), '/', '-')::DATE AS new_date
-	FROM sf_crime_data
-	LIMIT 10;
+-- Demo on using CAST( ) or equivalent :: in order to convert string to DATE
+	-- SELECT date AS orig_date, REPLACE(CONCAT(RIGHT(LEFT(date, 10), 4), '/', LEFT(date, 5)), '/', '-')::DATE AS new_date
+	-- FROM sf_crime_data
+	-- LIMIT 10;
+
+-- Using Coalesce to remove Null values
+	-- SELECT 	COUNT(primary_poc) AS regular_count,
+	-- 		COUNT(COALESCE(primary_poc, 'NO POC')) AS count_including_no_poc
+	-- FROM accounts
+	-- LIMIT 10;
+
+	-- SELECT *
+	-- FROM accounts a
+	-- LEFT JOIN orders o
+	-- ON a.id = o.account_id
+	-- WHERE o.total IS NULL;
+
+	SELECT COALESCE(o.id, a.id) AS filled_id, a.name, a.website, a.lat, a.long, a.primary_poc, a.sales_rep_id, o.*
+	FROM accounts a
+	LEFT JOIN orders o
+	ON a.id = o.account_id
+	WHERE o.total IS NULL;
+
+	SELECT 	COALESCE(o.id, a.id) filled_id, a.name, a.website, a.lat, a.long, a.primary_poc, a.sales_rep_id,
+			COALESCE(o.account_id, a.id) account_id, o.occurred_at,
+			COALESCE(o.standard_qty, 0) standard_qty,
+			COALESCE(o.gloss_qty,0) gloss_qty,
+			COALESCE(o.poster_qty,0) poster_qty,
+			COALESCE(o.total,0) total,
+			COALESCE(o.standard_amt_usd,0) standard_amt_usd,
+			COALESCE(o.gloss_amt_usd,0) gloss_amt_usd,
+			COALESCE(o.poster_amt_usd,0) poster_amt_usd,
+			COALESCE(o.total_amt_usd,0) total_amt_usd
+	FROM accounts a
+	LEFT JOIN orders o
+	ON a.id = o.account_id
+	WHERE o.total IS NULL;
