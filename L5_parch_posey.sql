@@ -33,9 +33,27 @@
 	-- ) AS one_hot_num_letter_table
 
 -- Use the accounts table to create first and last name columns that hold the first and last names for the primary_poc.
-	SELECT 	name,
-			primary_poc,
-			LEFT(primary_poc, POSITION(' ' IN primary_poc) - 1) AS first_name,
-			RIGHT(primary_poc, LENGTH(primary_poc) - POSITION(' ' IN primary_poc)) AS last_name
-	FROM accounts
-	LIMIT 40;
+	-- SELECT 	name,
+	-- 		primary_poc,
+	-- 		LEFT(primary_poc, POSITION(' ' IN primary_poc) - 1) AS first_name,
+	-- 		RIGHT(primary_poc, LENGTH(primary_poc) - POSITION(' ' IN primary_poc)) AS last_name
+	-- FROM accounts
+	-- LIMIT 40;
+
+	-- WITH first_dot_last_table AS(
+	-- 	SELECT 	name,
+	-- 			primary_poc,
+	-- 			LEFT(primary_poc, POSITION(' ' IN primary_poc) - 1) || '.' ||
+	-- 			RIGHT(primary_poc, LENGTH(primary_poc) - POSITION(' ' IN primary_poc)) AS first_dot_last
+	-- 	FROM accounts)
+	-- SELECT name, primary_poc, CONCAT(first_dot_last, '@', REPLACE(name, ' ', ''), '.com')
+	-- FROM first_dot_last_table
+	-- LIMIT 10;
+	--
+	-- SELECT name, primary_poc, CONCAT(REPLACE(primary_poc, ' ', '.'), '@', REPLACE(name, ' ', ''), '.com')
+	-- FROM accounts
+	-- LIMIT 10;
+
+	SELECT date AS orig_date, REPLACE(CONCAT(RIGHT(LEFT(date, 10), 4), '/', LEFT(date, 5)), '/', '-')::DATE AS new_date
+	FROM sf_crime_data
+	LIMIT 10;
